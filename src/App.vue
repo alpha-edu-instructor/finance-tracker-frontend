@@ -1,21 +1,31 @@
 <script setup>
+import { onMounted } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
+import { useAuthStore } from "./store/authStore";
+
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  if (!authStore.isAuth) {
+    authStore.logout();
+  } else {
+    await authStore.fetchUserData();
+  }
+});
 </script>
 
-<!-- <template>
-  <div class="container">
-    <router-view></router-view>
-  </div>
-</template> -->
-
 <template>
-  <div class="layout">
+  <div class="layout" v-if="authStore.isAuth">
     <Sidebar />
     <div class="main">
       <div class="wrapper">
         <router-view></router-view>
       </div>
     </div>
+  </div>
+
+  <div class="container" v-else>
+    <router-view></router-view>
   </div>
 </template>
 

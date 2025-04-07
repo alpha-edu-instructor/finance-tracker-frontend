@@ -1,6 +1,16 @@
 <script setup>
-import logo from "@/assets/logo.svg";
+import { useRouter } from "vue-router";
 import { LOGIN_PAGE_ROUTE } from "@/router/routes.js";
+import { useAuthStore } from "@/store/authStore";
+import logo from "@/assets/logo.svg";
+
+const authStore = useAuthStore();
+const router = useRouter();
+
+function logout() {
+  authStore.logout();
+  router.push(LOGIN_PAGE_ROUTE);
+}
 </script>
 
 <template>
@@ -21,7 +31,7 @@ import { LOGIN_PAGE_ROUTE } from "@/router/routes.js";
         </div>
       </div>
       <div class="sidebar-part">
-        <button class="sidebar-link logout">Выйти</button>
+        <button class="sidebar-link logout" @click="logout">Выйти</button>
       </div>
     </nav>
   </header>

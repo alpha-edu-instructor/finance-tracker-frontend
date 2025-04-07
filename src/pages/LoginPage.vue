@@ -1,17 +1,56 @@
 <script setup>
-import { REGISTER_PAGE_ROUTE } from "@/router/routes.js";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { DASHBOARD_PAGE_ROUTE, REGISTER_PAGE_ROUTE } from "@/router/routes.js";
+import { axiosInstance } from "@/services/axios";
+import Loader from "@/components/Loader.vue";
+import { useAuthStore } from "@/store/authStore";
+
+const router = useRouter();
+const authStore = useAuthStore();
+
+const email = ref("");
+const password = ref("");
+const isLoading = ref(false);
+const errorMessage = ref("");
+
+async function handleLogin() {
+  try {
+    errorMessage.value = "";
+    isLoading.value = true;
+    const { data } = await axiosInstance.post("/auth/login", {
+      email: email.value,
+      password: password.value
+    });
+    authStore.setToken(data.token);
+    await authStore.fetchUserData();
+    router.push(DASHBOARD_PAGE_ROUTE);
+  } catch (error) {
+    console.log(error);
+    errorMessage.value = error.response.data.message;
+  } finally {
+    isLoading.value = false;
+  }
+}
 </script>
 
 <template>
-  <form class="form">
+  <Loader v-if="isLoading" />
+  <form class="form" @submit.prevent="handleLogin">
     <h1 class="title form-title">Вход</h1>
-    <input type="text" placeholder="Ваш email" class="input" />
-    <input type="password" placeholder="Ваш пароль" class="input" />
+    <input type="text" placeholder="Ваш email" class="input" v-model="email" />
+    <input
+      type="password"
+      placeholder="Ваш пароль"
+      class="input"
+      v-model="password"
+    />
     <input type="submit" value="Войти" class="submit" />
     <p class="link">
       Нет аккаунта?
       <router-link :to="REGISTER_PAGE_ROUTE">Регистрация</router-link>
     </p>
+    <p class="error" v-if="errorMessage">{{ errorMessage }}</p>
   </form>
 </template>
 
@@ -55,5 +94,9 @@ import { REGISTER_PAGE_ROUTE } from "@/router/routes.js";
 .link a {
   font-weight: 700;
   color: var(--green);
+}
+.error {
+  color: var(--red);
+  font-size: 14px;
 }
 </style>
