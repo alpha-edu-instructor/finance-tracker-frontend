@@ -1,0 +1,12 @@
+@import "./variables.css";
+@import "./reset.css";
+
+body {
+  font-family: "Nunito", sans-serif;
+}
+
+.title {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+}
