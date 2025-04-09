@@ -1,6 +1,11 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { LOGIN_PAGE_ROUTE } from "@/router/routes.js";
+import { Icon } from "@iconify/vue";
+import {
+  LOGIN_PAGE_ROUTE,
+  DASHBOARD_PAGE_ROUTE,
+  PROFILE_PAGE_ROUTE
+} from "@/router/routes.js";
 import { useAuthStore } from "@/store/authStore";
 import logo from "@/assets/logo.svg";
 
@@ -22,16 +27,18 @@ function logout() {
           <h4>FinanceTrackerApp</h4>
         </div>
         <div class="sidebar-links">
-          <router-link :to="LOGIN_PAGE_ROUTE" class="sidebar-link"
-            >Мои транзакции</router-link
-          >
-          <router-link :to="LOGIN_PAGE_ROUTE" class="sidebar-link"
-            >Мой профиль</router-link
+          <router-link :to="DASHBOARD_PAGE_ROUTE" class="sidebar-link">
+            <Icon icon="mage:dashboard-check-fill" />Мои транзакции
+          </router-link>
+          <router-link :to="PROFILE_PAGE_ROUTE" class="sidebar-link">
+            <Icon icon="bxs:user" />Мой профиль</router-link
           >
         </div>
       </div>
       <div class="sidebar-part">
-        <button class="sidebar-link logout" @click="logout">Выйти</button>
+        <button class="sidebar-link logout" @click="logout">
+          <Icon icon="material-symbols:logout-rounded" />Выйти
+        </button>
       </div>
     </nav>
   </header>
@@ -66,6 +73,10 @@ function logout() {
   flex-direction: column;
 }
 .sidebar-link {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 14px;
   width: 100%;
   text-align: left;
   background: var(--white);
@@ -79,6 +90,9 @@ function logout() {
   cursor: pointer;
   background: #f5f5f5;
   color: var(--green);
+}
+.sidebar-link svg {
+  font-size: 24px;
 }
 .sidebar-part:last-child {
   width: 100%;
